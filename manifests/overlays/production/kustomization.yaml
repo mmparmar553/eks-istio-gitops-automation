@@ -9,10 +9,17 @@ namespace: istio-app
 resources:
   - ../../base
 
-patchesStrategicMerge:
-  - replica-patch.yaml
-  - resource-patch.yaml
+patches:
+  - path: replica-patch.yaml
+    target:
+      kind: Deployment
+      name: istio-test-app
+  - path: resource-patch.yaml
+    target:
+      kind: Deployment
+      name: istio-test-app
 
-commonLabels:
-  environment: production
-  version: v1.0.0
+labels:
+  - pairs:
+      environment: production
+      version: v1.0.0

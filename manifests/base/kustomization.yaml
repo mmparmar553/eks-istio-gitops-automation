@@ -11,10 +11,11 @@ resources:
   - gateway.yaml
   - security.yaml
 
-commonLabels:
-  app: istio-test-app
-  managed-by: argocd
-  
+labels:
+  - pairs:
+      app: istio-test-app
+      managed-by: argocd
+      
 images:
   - name: nginx
     newTag: "1.21"
