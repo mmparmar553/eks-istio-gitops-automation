@@ -1,0 +1,43 @@
+# Destination Rule for mTLS
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: istio-test-app-dr
+  namespace: istio-app
+spec:
+  host: istio-test-app-service
+  trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
+---
+# PeerAuthentication for strict mTLS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-app
+spec:
+  mtls:
+    mode: STRICT
+---
+# Authorization Policy
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: istio-test-app-authz
+  namespace: istio-app
+spec:
+  selector:
+    matchLabels:
+      app: istio-test-app
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/istio-system/sa/istio-ingressgateway-service-account"]
+  - from:
+    - source:
+        namespaces: ["istio-app"]
+  - to:
+    - operation:
+        methods: ["GET", "POST"]
+        paths: ["/*"]
