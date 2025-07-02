@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-gitops-simple
+  namespace: argocd
+  labels:
+    app: istio-gitops-simple
+    environment: production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/mmparmar553/eks-istio-gitops-automation.git
+    targetRevision: HEAD
+    path: istio-app-simple
+    directory:
+      include: "*.yaml"
+  
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-gitops-simple
+  
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 5
+  
+  revisionHistoryLimit: 10

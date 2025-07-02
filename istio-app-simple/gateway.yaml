@@ -1,0 +1,35 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: istio-gitops-gateway
+  namespace: istio-gitops-simple
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: istio-gitops-vs
+  namespace: istio-gitops-simple
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - istio-gitops-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /gitops
+    route:
+    - destination:
+        host: istio-gitops-service
+        port:
+          number: 80

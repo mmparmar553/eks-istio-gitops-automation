@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-gitops-simple
+  labels:
+    istio-injection: enabled
+    name: istio-gitops-simple
