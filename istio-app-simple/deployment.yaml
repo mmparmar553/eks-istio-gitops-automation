@@ -11,7 +11,6 @@ spec:
   selector:
     matchLabels:
       app: istio-gitops-app
-      version: v1
   template:
     metadata:
       labels:
@@ -19,13 +18,18 @@ spec:
         version: v1
       annotations:
         sidecar.istio.io/inject: "true"
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9113"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
-      - name: app
+      - name: nginx
         image: nginx:1.21
         ports:
         - containerPort: 80
           name: http
+        - containerPort: 8080
+          name: status
         resources:
           requests:
             memory: "64Mi"
@@ -33,11 +37,16 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "100m"
+        env:
+        - name: ENVIRONMENT
+          value: "istio-gitops"
         volumeMounts:
-        - name: html-content
-          mountPath: /usr/share/nginx/html
         - name: nginx-config
-          mountPath: /etc/nginx/conf.d
+          mountPath: /usr/share/nginx/html/index.html
+          subPath: index.html
+        - name: nginx-status-config
+          mountPath: /etc/nginx/conf.d/status.conf
+          subPath: status.conf
       - name: nginx-exporter
         image: nginx/nginx-prometheus-exporter:0.10.0
         args:
@@ -53,10 +62,10 @@ spec:
             memory: "64Mi"
             cpu: "50m"
       volumes:
-      - name: html-content
+      - name: nginx-config
         configMap:
           name: istio-html-config
-      - name: nginx-config
+      - name: nginx-status-config
         configMap:
           name: nginx-status-config
 ---
@@ -132,7 +141,7 @@ data:
             </div>
             
             <div class="highlight">
-                🎊 MONITORING INTEGRATED: Great job ----WOW WOW MANMOHAN RULES! 🎊
+                🎊 MONITORING FIXED: Great job ----WOW WOW MANMOHAN RULES! 🎊
             </div>
         </div>
     </body>
@@ -143,6 +152,10 @@ kind: ConfigMap
 metadata:
   name: nginx-status-config
   namespace: istio-gitops-simple
+  labels:
+    app: istio-gitops-app
+    environment: production
+    owner: manmohan
 data:
   status.conf: |
     server {
@@ -152,6 +165,14 @@ data:
         location /nginx_status {
             stub_status on;
             access_log off;
-            allow all;
+            allow 127.0.0.1;
+            allow 10.0.0.0/8;
+            deny all;
+        }
+        
+        location /health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
         }
     }
