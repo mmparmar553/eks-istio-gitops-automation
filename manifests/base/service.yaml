@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: istio-test-app-service
-  namespace: istio-app
+  namespace: istio-gitops-demo
   labels:
     app: istio-test-app
     service: istio-test-app

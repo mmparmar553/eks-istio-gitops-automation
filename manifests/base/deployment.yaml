@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: istio-test-app
-  namespace: istio-app
+  namespace: istio-gitops-demo
   labels:
     app: istio-test-app
     version: v1
@@ -67,21 +67,29 @@ spec:
           name: nginx-html-config
 ---
 apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: istio-test-app
+  namespace: istio-gitops-demo
+  labels:
+    app: istio-test-app
+---
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-html-config
-  namespace: istio-app
+  namespace: istio-gitops-demo
 data:
   index.html: |
     <!DOCTYPE html>
     <html>
     <head>
-        <title>EKS Istio Test Application</title>
+        <title>GitOps Automation Demo</title>
         <style>
             body { 
                 font-family: Arial, sans-serif; 
                 margin: 40px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
                 color: white;
                 text-align: center;
             }
@@ -91,46 +99,56 @@ data:
                 border-radius: 10px;
                 backdrop-filter: blur(10px);
             }
-            h1 { color: #ffeb3b; }
+            h1 { color: #ffeb3b; font-size: 2.5em; }
             .status { 
-                padding: 10px; 
-                border-radius: 5px; 
-                margin: 10px 0; 
+                padding: 15px; 
+                border-radius: 8px; 
+                margin: 15px 0; 
                 background: rgba(255,255,255,0.2);
+                border: 2px solid #ffeb3b;
+            }
+            .highlight {
+                background: rgba(255,255,255,0.3);
+                padding: 20px;
+                border-radius: 10px;
+                font-size: 1.3em;
+                font-weight: bold;
+                margin: 20px 0;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>🚀 EKS Istio Test Application</h1>
-            <p><strong>Great job ----WOW WOW MANMOHAN RULES!</strong></p>
+            <h1>🚀 GitOps Automation Success!</h1>
+            <div class="highlight">
+                🎉 Great job ----WOW WOW MANMOHAN RULES! 🎉
+            </div>
             
             <div class="status">
-                <h2>📊 Application Status</h2>
-                <p><strong>Istio:</strong> ✅ Enabled with mTLS</p>
-                <p><strong>Gateway:</strong> ✅ Public Access</p>
-                <p><strong>Security:</strong> ✅ Authorization Policies</p>
+                <h2>📊 GitOps Status</h2>
+                <p><strong>Repository:</strong> ✅ GitHub Connected</p>
+                <p><strong>ArgoCD:</strong> ✅ Auto-Sync Enabled</p>
+                <p><strong>Deployment:</strong> ✅ Automated</p>
+                <p><strong>Istio:</strong> ✅ Service Mesh Active</p>
             </div>
             
             <div class="status">
                 <h2>🔒 Security Features</h2>
-                <p>• ✅ Istio mTLS enabled (STRICT mode)</p>
-                <p>• ✅ Authorization policies applied</p>
-                <p>• ✅ Istio Gateway for public access</p>
-                <p>• ✅ Service mesh communication secured</p>
+                <p>• ✅ Istio mTLS (STRICT mode)</p>
+                <p>• ✅ Authorization policies</p>
+                <p>• ✅ Istio Gateway access</p>
+                <p>• ✅ PostgreSQL integration ready</p>
             </div>
             
             <div class="status">
-                <h2>🎯 Next Steps</h2>
-                <p>• Connect to PostgreSQL database</p>
-                <p>• Add REST API endpoints</p>
-                <p>• Implement full application features</p>
+                <h2>🔄 Automation Flow</h2>
+                <p><strong>GitHub Push → ArgoCD Sync → EKS Deploy → Live!</strong></p>
+                <p>Complete end-to-end automation working!</p>
             </div>
             
-            <div class="status">
-                <h2>🎉 Success!</h2>
-                <p><strong>Istio Service Mesh + mTLS + Gateway = Working!</strong></p>
-                <p>Complete EKS + Istio + PostgreSQL integration ready!</p>
+            <div class="highlight">
+                🌟 One-Click GitOps Automation Complete! 🌟<br>
+                <strong>Great job ----WOW WOW MANMOHAN RULES!</strong>
             </div>
         </div>
     </body>

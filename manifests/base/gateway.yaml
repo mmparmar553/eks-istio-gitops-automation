@@ -1,8 +1,8 @@
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
-  name: istio-test-app-gateway
-  namespace: istio-app
+  name: istio-gitops-gateway
+  namespace: istio-gitops-demo
 spec:
   selector:
     istio: ingressgateway
@@ -12,18 +12,18 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "*"
+    - "gitops.istio.local"
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: istio-test-app-vs
-  namespace: istio-app
+  name: istio-gitops-vs
+  namespace: istio-gitops-demo
 spec:
   hosts:
-  - "*"
+  - "gitops.istio.local"
   gateways:
-  - istio-test-app-gateway
+  - istio-gitops-gateway
   http:
   - match:
     - uri:

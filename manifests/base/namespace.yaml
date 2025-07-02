@@ -1,21 +1,21 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: istio-app
+  name: istio-gitops-demo
   labels:
     istio-injection: enabled
-    name: istio-app
+    name: istio-gitops-demo
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: postgres-secret
-  namespace: istio-app
+  namespace: istio-gitops-demo
 type: Opaque
 data:
   # Base64 encoded values
-  # DB_HOST will be set after RDS creation
-  DB_PORT: NTQzMg==  # 5432
-  DB_NAME: aXN0aW9hcHA=  # istioapp
-  DB_USER: cG9zdGdyZXM=  # postgres
-  DB_PASSWORD: TWFubW9oYW5Qb3N0Z3JlczEyMyE=  # ManmohanPostgres123!
+  DB_HOST: ZWtzLWlzdGlvLXBvc3RncmVzLmN0eHYxeDhhd291ai51cy1lYXN0LTEucmRzLmFtYXpvbmF3cy5jb20=
+  DB_PORT: NTQzMg==
+  DB_NAME: aXN0aW9hcHA=
+  DB_USER: cG9zdGdyZXM=
+  DB_PASSWORD: TWFubW9oYW5Qb3N0Z3JlczEyMyE=
