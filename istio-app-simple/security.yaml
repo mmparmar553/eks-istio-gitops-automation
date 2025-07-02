@@ -4,8 +4,14 @@ metadata:
   name: gitops-mtls
   namespace: istio-gitops-simple
 spec:
+  selector:
+    matchLabels:
+      app: istio-gitops-app
   mtls:
     mode: STRICT
+  portLevelMtls:
+    9113:
+      mode: PERMISSIVE
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: DestinationRule
@@ -17,6 +23,11 @@ spec:
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
+  portLevelSettings:
+  - port:
+      number: 9113
+    tls:
+      mode: DISABLE
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
@@ -34,3 +45,8 @@ spec:
   - from:
     - source:
         namespaces: ["istio-gitops-simple"]
+  - to:
+    - operation:
+        ports: ["9113"]
+    from:
+    - source: {}
