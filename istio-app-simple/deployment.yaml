@@ -36,10 +36,29 @@ spec:
         volumeMounts:
         - name: html-content
           mountPath: /usr/share/nginx/html
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+      - name: nginx-exporter
+        image: nginx/nginx-prometheus-exporter:0.10.0
+        args:
+          - -nginx.scrape-uri=http://localhost:8080/nginx_status
+        ports:
+        - containerPort: 9113
+          name: metrics
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "25m"
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
       volumes:
       - name: html-content
         configMap:
           name: istio-html-config
+      - name: nginx-config
+        configMap:
+          name: nginx-status-config
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -51,7 +70,7 @@ data:
     <!DOCTYPE html>
     <html>
     <head>
-        <title>🚀 GitOps Automation Success!</title>
+        <title>🚀 GitOps + Monitoring Success!</title>
         <style>
             body { 
                 font-family: Arial, sans-serif; 
@@ -86,32 +105,55 @@ data:
     </head>
     <body>
         <div class="container">
-            <h1>🎉 🔥 LIVE GitOps Update - WOW WOW MANMOHAN!</h1>
+            <h1>🔥 GitOps + Monitoring - WOW WOW MANMOHAN!</h1>
             
             <div class="highlight">
                 🚀 Great job ----WOW WOW MANMOHAN RULES! 🚀
             </div>
             
             <div class="status">
-                <h2>✅ Complete Automation Working!</h2>
-                <p><strong>GitHub → ArgoCD → EKS → Istio → Live!</strong></p>
+                <h2>✅ Complete Stack Working!</h2>
+                <p><strong>GitHub → ArgoCD → EKS → Istio → Monitoring!</strong></p>
                 <p>🔄 Auto-sync enabled</p>
                 <p>🔒 mTLS security active</p>
                 <p>🌐 Istio Gateway configured</p>
+                <p>📊 Prometheus monitoring enabled</p>
             </div>
             
             <div class="status">
-                <h2>🎯 GitOps Features</h2>
+                <h2>🎯 GitOps + Monitoring Features</h2>
                 <p>• ✅ Automatic deployment from GitHub</p>
                 <p>• ✅ Self-healing with ArgoCD</p>
                 <p>• ✅ Istio service mesh with mTLS</p>
                 <p>• ✅ PostgreSQL database ready</p>
+                <p>• ✅ Prometheus metrics collection</p>
+                <p>• ✅ Grafana dashboard monitoring</p>
                 <p>• ✅ Zero-downtime updates</p>
             </div>
             
             <div class="highlight">
-                🎊 🎊 LIVE UPDATE: Great job ----WOW WOW MANMOHAN RULES! 🎊 🎊
+                🎊 MONITORING INTEGRATED: Great job ----WOW WOW MANMOHAN RULES! 🎊
             </div>
         </div>
     </body>
     </html>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-status-config
+  namespace: istio-gitops-simple
+data:
+  status.conf: |
+    server {
+        listen 8080;
+        server_name localhost;
+        
+        location /nginx_status {
+            stub_status on;
+            access_log off;
+            allow 127.0.0.1;
+            allow ::1;
+            deny all;
+        }
+    }

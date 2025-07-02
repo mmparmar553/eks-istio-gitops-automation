@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: istio-gitops-monitor
+  namespace: istio-gitops-simple
+  labels:
+    app: istio-gitops-app
+    environment: production
+    owner: manmohan
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: istio-gitops-app
+  namespaceSelector:
+    matchNames:
+      - istio-gitops-simple
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 30s
+    scheme: http
