@@ -23,11 +23,11 @@ spec:
   trafficPolicy:
     tls:
       mode: ISTIO_MUTUAL
-  portLevelSettings:
-  - port:
-      number: 9113
-    tls:
-      mode: DISABLE
+    portLevelSettings:
+    - port:
+        number: 9113
+      tls:
+        mode: DISABLE
 ---
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
