@@ -48,5 +48,3 @@ spec:
   - to:
     - operation:
         ports: ["9113"]
-    from:
-    - source: {}
