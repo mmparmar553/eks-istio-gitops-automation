@@ -28,6 +28,8 @@ spec:
   - match:
     - uri:
         prefix: /gitops
+    rewrite:
+      uri: /
     route:
     - destination:
         host: istio-gitops-service
